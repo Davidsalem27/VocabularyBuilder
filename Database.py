@@ -115,6 +115,7 @@ class Database_Manager:
 
         meanings = self._cursor.fetchall()
         meanings_to_return=[]
+        print("atleast its in data base")
         if meanings:
             for meaning_id, meaning in meanings:  # Unpack the tuple
 

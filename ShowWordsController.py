@@ -9,6 +9,8 @@ class ShowWordsController:
         self.word_manager=word_manager
 
     def get_all_words(self) -> list[str]:
-        return self.word_manager.get_all_words()
+        x= self.word_manager.get_all_words()
+        print(x)
+        return x
     def get_meaning(self,word) -> list[tuple]:
         return self.word_manager.get_meanings(word)

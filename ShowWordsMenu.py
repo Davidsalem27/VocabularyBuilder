@@ -71,21 +71,30 @@ class ShowWordsMenu(QWidget):
         # Create a widget to hold the QListWidget
         list_widget_container = QWidget()
         list_layout = QVBoxLayout(list_widget_container)
-
+        print("show all words0")
         # List widget to display words
         self.word_list = QListWidget(self)
+        print("show all words1")
         self.word_list.addItems(self.controller.get_all_words())  # get the words
-        self.word_list.itemDoubleClicked.connect(self.open_word_detail)  # Connect double-click to method
+        print("show all word2")
+        print(self.word_list)
+        try:
+            self.word_list.itemDoubleClicked.connect(self.open_word_detail)
+        except Exception as e:
+            print(f"An error occurred: {e}")  # Output the error to the console
 
+        print("show all words1")
         list_layout.addWidget(self.word_list)  # Add the QListWidget to the layout
         list_widget_container.setLayout(list_layout)  # Set the layout for the container
-
+        print("show all words2")
         scroll_area.setWidget(list_widget_container)  # Set the container as the widget of the scroll area
         layout.addWidget(scroll_area)  # Add the scroll area to the main layout
 
         self.setLayout(layout)
 
+        print("show all words3")
     def open_word_detail(self, item):
+        print("open word detail")
         word = item.text()  # Get the word from the clicked item
         meanings = self.controller.get_meaning(word)
         self.detail_window = WordMeaningWindow(word, meanings)  # Create a new window for the word
@@ -110,6 +119,7 @@ class WordMeaningWindow(QWidget):
 
         # Adding meanings and examples to the layout
         for index, (meaning, example) in enumerate(self.meanings):
+
             meaning_label = QLabel(f"{index + 1}. {meaning}", self)
             meaning_label.setWordWrap(True)
             scroll_layout.addWidget(meaning_label)

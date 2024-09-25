@@ -35,13 +35,13 @@ class ManageWordsMenu(QWidget):
         self.show_all_words_button = QPushButton('Show all words', self)
         self.show_all_words_button.clicked.connect(self.show_all_words)
         layout.addWidget(self.show_all_words_button)
-
+        self.show_words_menu=None
         self.delete_all_words_button = QPushButton('Delete all the words', self)
         self.delete_all_words_button.clicked.connect(self.delete_all_words)
         layout.addWidget(self.delete_all_words_button)
 
         self.load_local_button = QPushButton('Load From local file', self)
-        self.show_all_words_button.clicked.connect(self.load_local_file)
+        self.load_local_button.clicked.connect(self.load_local_file)
         layout.addWidget(self.load_local_button)
 
         # Label to display output
@@ -68,8 +68,12 @@ class ManageWordsMenu(QWidget):
 
     def show_all_words(self):
         # Example function that can be called
+
         show_words_controller=self.controller.open_show_words_menu()
+        print("before creating")
         self.show_words_menu=ShowWordsMenu.ShowWordsMenu(show_words_controller)
+        print("this is in the show_all_words function")
         self.show_words_menu.show()
+
 
 

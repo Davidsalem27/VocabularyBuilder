@@ -1,17 +1,13 @@
-import MainMenu
-import QuizMenuController
-import ShowWordsController
-import ShowWordsMenu
-import WordManager as wm
-import MainMenu as gui
-import tkinter as tk
 
+import QuizMenuController
+import SettingsLoader
+import WordManager as wm
 import WordManagerController
 
 
 class MainMenuController:
     """
-    the controller of the model-view-controller design pattern
+    the main menu controller of the model-view-controller design pattern
     """
     def __init__(self,word_manager : wm.WordManager):
         self.word_manager=word_manager
@@ -23,10 +19,8 @@ class MainMenuController:
         return QuizMenuController.QuizMenuController(self.word_manager)
     # def open_show_words_menu(self):
     #     return ShowWordsController.ShowWordsController(self.word_manager)
-
-
-    # def delete_word(self, word: str):
-    #     self.word_manager.delete_word(word)
+    def open_settings_menu(self):
+        settings=SettingsLoader.SettingsEditor().load_file()
 
 
 
