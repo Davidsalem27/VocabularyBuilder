@@ -1,5 +1,5 @@
 import MainMenu
-import QuizController
+import QuizMenuController
 import ShowWordsController
 import ShowWordsMenu
 import WordManager as wm
@@ -19,8 +19,8 @@ class MainMenuController:
 
     def open_words_menu(self) -> WordManagerController.WordManagerController:
         return WordManagerController.WordManagerController(self.word_manager)
-    def open_quiz_menu(self) -> QuizController.QuizController:
-        return QuizController.QuizController(self.word_manager)
+    def open_quiz_menu(self) -> QuizMenuController.QuizMenuController:
+        return QuizMenuController.QuizMenuController(self.word_manager)
     # def open_show_words_menu(self):
     #     return ShowWordsController.ShowWordsController(self.word_manager)
 

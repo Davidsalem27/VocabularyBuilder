@@ -7,13 +7,17 @@ class WordManagerController:
     """
     def __init__(self,word_manager : wm.WordManager):
         self.word_manager=word_manager
-
+    def load_local_file(self):
+        self.word_manager.add_words_from_textfile()
+    def delete_all_words(self):
+        self.word_manager.empty_database()
     def get_meanings(self,word: str)-> bool:
         self.word_manager.get_meanings(word)
         return True
 
-    def submit_new_word(self, new_word: str) -> bool:
+    def add_new_word(self, new_word: str) -> bool:
          # Get the user input from the GUI entry
+
         if self.word_manager.add_word(new_word):
             return True
         return False

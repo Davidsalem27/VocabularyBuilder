@@ -11,11 +11,16 @@ class WebScraper:
         self.website_used=website_used
 
     def add_word(self , name_word: str)  -> List[Tuple[str, Union[str, int]]]:# [(),(),()..]
+
         url=self.website_used+name_word
         result = requests.get(url)
         doc_web = BeautifulSoup(result.text,"html.parser")
         definition = doc_web.find('div', class_='vg')
+        if not definition:
+            raise Exception
         meanings = definition.find_all('div', class_='vg-sseq-entry-item')
+
+
         list_meanings=[]
         for meaning in meanings:
 

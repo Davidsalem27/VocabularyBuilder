@@ -2,15 +2,35 @@ import Database as db
 import Word as word
 import WordFactory
 
-
+FILE_PATH="ListWords.txt"
 class WordManager:
     def __init__(self):
         self.database=db.Database_Manager()
         self.word_factory = WordFactory.WordFactory()
 
 
+    def add_words_from_textfile(self, path=FILE_PATH) ->bool:
+        words=[]
+        try:
+            with open(path, 'r') as file:
+                words = [line.strip() for line in file if line.strip()]  # Read and clean lines
+        except FileNotFoundError:
+            print(f"Error: The file {path} does not exist.")
+            return False
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return False
+        for i in range(len(words)):
+            self.add_word(words[i])
+        return True
     def add_word(self,name : str) -> bool:
-        new_word=self.word_factory.create_word_web(name)
+        if (name==""):
+            return
+        try:
+            new_word=self.word_factory.create_word_web(name)
+        except Exception:
+            print("problem with word")
+            return
         self.database.insert_word(new_word)
         return True
     def get_meanings(self,word:str):
