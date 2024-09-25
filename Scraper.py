@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+from Exceptions import URLException
+
 
 class WebScraper:
 
@@ -12,12 +14,15 @@ class WebScraper:
 
     def add_word(self , name_word: str)  -> List[Tuple[str, Union[str, int]]]:# [(),(),()..]
 
+        if name_word=="":
+            raise ValueError()
         url=self.website_used+name_word
         result = requests.get(url)
         doc_web = BeautifulSoup(result.text,"html.parser")
         definition = doc_web.find('div', class_='vg')
+
         if not definition:
-            raise Exception
+            raise URLException()
         meanings = definition.find_all('div', class_='vg-sseq-entry-item')
 
 
@@ -29,11 +34,11 @@ class WebScraper:
                 mean = submeaning.find('span', class_="dtText")
                 example_sent = submeaning.find('div', class_="sub-content-thread")
                 # rv[1]+=[mean.get_text()]
-                print(mean.get_text())
+
                 if example_sent:
                     # rv[1] += [example_sent.get_text()]
                     list_meanings.append((mean.get_text(),example_sent.get_text()))
-                    print(example_sent.get_text())
+
                 else:
                     list_meanings.append((mean.get_text(),0))
         return list_meanings

@@ -1,5 +1,7 @@
 import ShowWordsController
 import WordManager as wm
+import Exceptions
+
 
 class WordManagerController:
     """
@@ -15,12 +17,15 @@ class WordManagerController:
         self.word_manager.get_meanings(word)
         return True
 
-    def add_new_word(self, new_word: str) -> bool:
+    def add_new_word(self, new_word: str) -> str:
          # Get the user input from the GUI entry
-
-        if self.word_manager.add_word(new_word):
-            return True
-        return False
+        try:
+            self.word_manager.add_word(new_word)
+            return (f'Word added to database: {new_word}')
+        except Exceptions.URLException:
+            return ("problem with adding " + new_word +", please check spelling" )
+        except ValueError:
+            return ("Please write word before trying to add")
 
     def get_all_words(self) ->list[str]:
         return self.word_manager.get_all_words()

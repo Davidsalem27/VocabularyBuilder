@@ -24,13 +24,9 @@ class WordManager:
             self.add_word(words[i])
         return True
     def add_word(self,name : str) -> bool:
-        if (name==""):
-            return
-        try:
-            new_word=self.word_factory.create_word_web(name)
-        except Exception:
-            print("problem with word")
-            return
+
+        new_word=self.word_factory.create_word_web(name)
+
         self.database.insert_word(new_word)
         return True
     def get_meanings(self,word:str):

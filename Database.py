@@ -1,3 +1,4 @@
+import random
 import sqlite3
 
 
@@ -92,6 +93,17 @@ class Database_Manager:
         words=self._cursor.fetchall()
 
         return words
+
+    def fetch_random_weighted_words(self, n, sample_size):
+        self._cursor.execute("SELECT * FROM words ORDER BY weight DESC LIMIT ?", (n,))
+        top_weighted_words = self._cursor.fetchall()
+
+        # Randomly sample from the top weighted words
+        if len(top_weighted_words) <= sample_size:
+            random_words = top_weighted_words  # If fewer words than sample size, take all
+        else:
+            random_words = random.sample(top_weighted_words, sample_size)
+        return random_words
 
     def get_meanings_of_word(self,word_name):
         self._cursor.execute("""

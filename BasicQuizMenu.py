@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import font
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QHBoxLayout, QPushButton, QLabel
 
 SIZE_QUIZ = 5
@@ -72,7 +73,7 @@ class BasicQuizMenu(QWidget):
         # self.word_label = QLabel(self.current_word, self)
 
         word_label.setStyleSheet("font-size: 30px;")
-        self.scroll_layout.addWidget(word_label)
+        self.scroll_layout.addWidget(word_label,alignment=Qt.AlignCenter)
 
 
     def create_labels_meanings_examples(self):
