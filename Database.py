@@ -40,6 +40,8 @@ class Database_Manager:
                 """)
         self._connection.commit()
     def delete_word(self,word: str):
+        if not self.word_exists(word):
+            raise ValueError(word + " doesnt exist in database")
         self._cursor.execute("DELETE FROM words WHERE word = ?", (word,))
         self._connection.commit()
     def update_weight(self,word:str,increment : int):
@@ -49,15 +51,19 @@ class Database_Manager:
 
 
     def insert_word(self, word):
+
         if (self.word_exists(word.name)):
-            print("word already exists")
+
             return
         # Insert the word into the words table
+
         self._cursor.execute("INSERT OR IGNORE INTO words (word, weight) VALUES (?, ?);", (word.name, word.weight))
         self._connection.commit()
 
         # Get the word ID
         self._cursor.execute("SELECT id FROM words WHERE word = ?;", (word.name,))
+
+
         word_id = self._cursor.fetchone()[0]
 
         # Insert meanings
@@ -115,7 +121,7 @@ class Database_Manager:
 
         meanings = self._cursor.fetchall()
         meanings_to_return=[]
-        print("atleast its in data base")
+
         if meanings:
             for meaning_id, meaning in meanings:  # Unpack the tuple
 
@@ -171,8 +177,9 @@ class Database_Manager:
             print(f"No meanings found for the word '{word_name}'.")
 
     def word_exists(self, word_name):
+
         self._cursor.execute("SELECT 1 FROM words WHERE word = ?;", (word_name,))
-        if (self._cursor.fetchone()):
+        if self._cursor.fetchone():
             return True
         return False
 

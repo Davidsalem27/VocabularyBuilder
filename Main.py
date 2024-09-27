@@ -1,42 +1,35 @@
 import sys
-import threading
+
 
 from PyQt5.QtWidgets import QApplication, QWidget
-import PIL.Image
-import pystray
 import BasicQuizController
 import BasicQuizMenu
-import WordFactory
-import WordManager as wm
-import MainMenuController
-import MainMenu as MainMenu
+import ControllerMenuFactory
+import TrayBar
 
-import time
+import WordManager as wm
+
+
+
 
 WAIT_TIME_SECONDS = 300
 
 
 class MainApp:
     """
-    the main program, opens the main menu and a timed quiz according to what the user wants
+    the main program, opens the main menu and is responsible for
+    minimizing and closing the program
 
     """
     def __init__(self):
-        # self.root = ctk.CTk()
+        self.menu_factory=ControllerMenuFactory.ControllerMenuFactory()
+        self.app = QApplication(sys.argv)
         self.word_manager = wm.WordManager()
         self.scheduler_on=False
         self.scheduler=None
         self.main_menu_on = False
         self.main_menu=None
-    def run_main_menu(self):
-        self.main_menu_on=True
-        print("Running main menu..")
-        word_manager=wm.WordManager()
-        prog = MainMenuController.MainMenuController(word_manager)
-        main_menu=MainMenu.MainMenu(self.root, prog, self.set_quiz_scheduler)
-
-        self.root.mainloop()
-
+        self.tray=None
 
     def set_quiz_scheduler(self):
         self.scheduler_on=not self.scheduler_on
@@ -52,49 +45,42 @@ class MainApp:
             self.main_menu.show()
 
     def run(self):
-        tray_thread = threading.Thread(target=self.run_tray)
-        tray_thread.start()
         self.run_main_menu_new()
+        sys.exit(self.app.exec_())
     def minimize(self):
+        """
+        minimizes the whole program
+        :return:
+        """
         self.main_menu.hide()
         app = QApplication.instance()
         for widget in app.topLevelWidgets():
             if isinstance(widget, QWidget) and widget is not self:
                 widget.hide()
         self.main_menu_on=False
-    def run_tray(self):
-        image=PIL.Image.open("960x0.webp")
-        self.icon=pystray.Icon("david",image,menu=pystray.Menu(
-            pystray.MenuItem("Open Vocabulary Builder",self.open_mainmenu_tray)
-        ))
-        self.icon.run()
 
-    def on_quiz_close(self, quiz_root):
-        quiz_root.destroy()
-        print("Quiz closed.")
+
+    def create_tray(self):
+        self.tray = TrayBar.TrayBar(self.close_program, self.open_mainmenu_tray)
+        self.tray.close_signal.connect(self.close_program)  # Connect the signal
+        self.tray.start()
+
 
     def run_main_menu_new(self):
-        word_manager=wm.WordManager()
-        # word_manager.empty_database()
-        # word_manager.add_words_from_textfile()
-
-        controller = MainMenuController.MainMenuController(word_manager)
-        self.app = QApplication(sys.argv)
-        self.main_menu = MainMenu.MainMenu(controller,self.minimize,self.close_program)
-        self.main_menu_on=True
+        self.main_menu=self.menu_factory.create_main_menu(self.minimize,self.close_program)
+        self.main_menu_on = True
         self.main_menu.show()
-        sys.exit(self.app.exec_())
+        self.create_tray()
+
     def close_program(self):
-        app = QApplication.instance()
-        for widget in app.topLevelWidgets():
-            if isinstance(widget, QWidget) and widget is not self.main_menu:
-                widget.close()
-        self.icon.stop()
+        if self.main_menu:
+            self.main_menu.close()
+        if self.tray:
+            self.tray.quit()
+        print("Program closed")
+        QApplication.quit()  #close program
 
-class TrayIcon:
 
-    def __init__(self):
-        pass
 
 if __name__ == "__main__":
     main=MainApp()

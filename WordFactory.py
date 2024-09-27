@@ -1,7 +1,7 @@
 import Word as word
 import Scraper as scraper
+import Constants as c
 
-STARTING_WEIGHT=10
 class WordFactory:
     """
     factory for creating Word object
@@ -15,19 +15,33 @@ class WordFactory:
         :param name: the name of the word
         :return: a new Word object
         """
-        meanings=self.scraper.add_word(name) #add test return [[str][list of tuples]]
-        new_word=word.Word(name,meanings,STARTING_WEIGHT)
+        meanings=self.scraper.add_word(name)
+        new_word=word.Word(name,meanings,c.STARTING_WEIGHT)
         return new_word
 
-    def load_words_local(self, path: str) -> word.Word:
-        """load from a local file"""
+    def load_words_local(self, path: str) -> list[word.Word]:
+
+        """
+        function for loading words from local text file and turning them
+        into Word objects
+        :param path: the path to file
+        :return: list of Word objects
+        """
+        word_names=self.file_reader(path)
+        words=[]
+        for i in range(len(word_names)):
+            words.append(self.create_word_web(word_names[i]))
+        return words
+    def file_reader(self,path : str) -> list[str]:
+        """
+        basic function for loading a text file
+        :param path: the location of the file
+        :return: a list of the words i.e. [word1,word2,...]
+        """
         try:
             with open(path, 'r') as file:
                 words = [line.strip() for line in file if line.strip()]  # Read and clean lines
             return words
         except FileNotFoundError:
             print(f"Error: The file {path} does not exist.")
-            return []
-        except Exception as e:
-            print(f"An error occurred: {e}")
             return []

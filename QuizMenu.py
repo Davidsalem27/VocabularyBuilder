@@ -28,8 +28,11 @@ import QuizMenuController
 #         BasicQuizMenu.BasicQuizMenu(self.top,basic_quiz_controller)
 
 class QuizMenu(QWidget):
-    def __init__(self,controller):
+    def __init__(self,controller,create_basic_quiz,create_timed_quiz_menu):
         super().__init__()
+        self.set_menu = None
+        self.create_timed_quiz_menu=create_timed_quiz_menu
+        self.create_basic_quiz=create_basic_quiz
         self.setWindowTitle('Quiz Menu')
         self.setGeometry(100, 100, 300, 200)
         self.controller=controller
@@ -53,35 +56,23 @@ class QuizMenu(QWidget):
         layout.addWidget(self.button2)
 
         # Button 3
-        self.button3 = QPushButton('Set quiz timer', self)
-        self.button3.clicked.connect(self.function3)
+        self.button3 = QPushButton('Set Timed Quiz', self)
+        self.button3.clicked.connect(self.open_set_time_quiz)
         layout.addWidget(self.button3)
-        # Slider
-        self.slider = QSlider(self)
-        self.slider.setOrientation(Qt.Horizontal)
-        self.slider.setRange(0, 1)  # Set range for two options
-        self.slider.setValue(0)  # Default value
-        layout.addWidget(self.slider)
+
+
 
         # Connect slider value change to a method
-        self.slider.valueChanged.connect(self.slider_changed)
         self.setLayout(layout)
 
     def open_basic_quiz_menu(self):
-        basic_controller=self.controller.open_basic_quiz()
-        print("asdasd")
-        self.basic_quiz=BasicQuizMenu.BasicQuizMenu(basic_controller)
+        self.basic_quiz=self.create_basic_quiz()
         self.basic_quiz.show()
 
     def function2(self):
         self.output_label.setText('Function 2 was called!')
 
-    def function3(self):
-        new_value = 1 if self.slider.value() == 0 else 0
-        self.slider.setValue(new_value)
+    def open_set_time_quiz(self):
+        self.set_menu=self.create_timed_quiz_menu()
+        self.set_menu.show()
 
-    def slider_changed(self, value):
-        if value == 0:
-            self.output_label.setText('Slider option 1 selected.')
-        else:
-            self.output_label.setText('Slider option 2 selected.')

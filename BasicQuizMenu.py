@@ -4,18 +4,19 @@ from tkinter import font
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QHBoxLayout, QPushButton, QLabel
 
-SIZE_QUIZ = 5
+
 
 class BasicQuizMenu(QWidget):
-    def __init__(self, controller):
+    def __init__(self, controller,num_words):
         super().__init__()
+        self.num_words=num_words
         self.controller = controller
         self.current_window_index = 0
         self.setWindowTitle("Basic Quiz")
         self.setGeometry(100, 100, 800, 800)
         self.current_word=""
         self.current_meaning=None
-        self.definitions = self.controller.get_n_definitions(SIZE_QUIZ)
+        self.definitions = self.controller.get_n_definitions(self.num_words)
         # self.word_label = QLabel("", self)
         self.initUI()
 

@@ -15,15 +15,21 @@ class WebScraper:
     def add_word(self , name_word: str)  -> List[Tuple[str, Union[str, int]]]:# [(),(),()..]
 
         if name_word=="":
-            raise ValueError()
+            raise ValueError("empty string is not a word")
         url=self.website_used+name_word
         result = requests.get(url)
+
+
         doc_web = BeautifulSoup(result.text,"html.parser")
+
+
         definition = doc_web.find('div', class_='vg')
 
         if not definition:
-            raise URLException()
+            raise URLException(name_word)
+
         meanings = definition.find_all('div', class_='vg-sseq-entry-item')
+
 
 
         list_meanings=[]
@@ -41,6 +47,7 @@ class WebScraper:
 
                 else:
                     list_meanings.append((mean.get_text(),0))
+
         return list_meanings
 
 
