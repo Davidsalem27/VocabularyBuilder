@@ -1,46 +1,91 @@
-import ShowWordsController
+
 import WordManager as wm
 import Exceptions
 
-
 class ManageWordsController:
     """
-    the controller of the model-view-controller design pattern
-    """
-    def __init__(self,word_manager : wm.WordManager):
-        self.word_manager=word_manager
-    def load_local_file(self):
-        try:
-            self.word_manager.add_words_from_textfile()
-        except Exceptions.URLException as e:
-            return "problem with the word " + str(e) + ", maybe spelling is wrong?"
-        else:
-            return "text file loaded successfully"
+    Controller for the managing words menu.
 
-    def delete_all_words(self):
-        self.word_manager.empty_database()
-    def get_meanings(self,word: str)-> bool:
-        self.word_manager.get_meanings(word)
-        return True
+    Fields:
+        _word_manager (wm.WordManager): Instance of WordManager for communicating
+         with the database.
+
+    Methods:
+        load_local_file() -> str:
+            Loads words from a local text file into the word manager.
+
+        delete_all_words() -> None:
+            Deletes all words from the database.
+
+        add_new_word(new_word: str) -> str:
+            Adds a new word to the database.
+
+        get_all_words() -> list[str]:
+            Retrieves all words from the word manager.
+
+        delete_word(word: str) -> str:
+            Deletes a specific word from the database.
+    """
+
+    def __init__(self, word_manager: wm.WordManager) -> None:
+        """
+        Initializes the ManageWordsController with a WordManager instance.
+
+        :param word_manager: An instance of WordManager to manage word operations.
+        """
+        self._word_manager = word_manager
+
+    def load_local_file(self) -> str:
+        """
+        Loads words from a local text file into the word manager.
+        if an exception occurs a msg is returned
+        :return: A message indicating the result of the load operation.
+        """
+        try:
+            self._word_manager.add_words_from_textfile()
+        except Exceptions.URLException as e:
+            return "Problem with the word " + str(e) + ", maybe spelling is wrong?"
+        else:
+            return "Text file loaded successfully"
+
+    def delete_all_words(self) -> None:
+        """
+        Deletes all words from the database.
+        """
+        self._word_manager.empty_database()
 
     def add_new_word(self, new_word: str) -> str:
-         # Get the user input from the GUI entry
-        try:
-            self.word_manager.add_word(new_word)
-            return (f'Word added to database: {new_word}')
-        except Exceptions.URLException:
-            return ("problem with adding " + new_word +", please check spelling" )
-        except ValueError:
-            return ("Please write word before trying to add")
+        """
+        Adds a new word to the database.
 
-    def get_all_words(self) ->list[str]:
-        return self.word_manager.get_all_words()
+        :param new_word: The word to be added.
+        :return: A message indicating the result of the add operation.
+        """
+        try:
+            self._word_manager.add_word(new_word)
+            return f'Word added to database: {new_word}'
+        except Exceptions.URLException:
+            return "Problem with adding " + new_word + ", please check spelling."
+        except ValueError:
+            return "Please write a word before trying to add."
+
+    def get_all_words(self) -> list[str]:
+        """
+        Retrieves all words from the word manager.
+
+        :return: A list of all words in the database.
+        """
+        return self._word_manager.get_all_words()
 
     def delete_word(self, word: str) -> str:
+        """
+        Deletes a specific word from the database.
+
+        :param word: The word to be deleted.
+        :return: A message indicating the result of the delete operation.
+        """
         try:
-            self.word_manager.delete_word(word)
+            self._word_manager.delete_word(word)
         except ValueError as e:
             return str(e)
-        return word +" deleted successfully"
-    def open_show_words_menu(self):
-        return ShowWordsController.ShowWordsController(self.word_manager)
+        return word + " deleted successfully"

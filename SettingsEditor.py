@@ -16,5 +16,4 @@ class SettingsEditor:
             json.dump(self.data, json_file, indent=4)
 
     def init_file(self):
-        self.data={"quiz Timer": 0,"quiz time interval":30, "Number words basic quiz":5,
-                   "dark mode":0}
+        self.data={"dark mode": 0}

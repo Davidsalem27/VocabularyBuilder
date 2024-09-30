@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import QMessageBox
 
-
-import Constants as c
+from Constants import Constants as c
 
 class SetTimedQuizzesController:
     """
@@ -36,10 +36,17 @@ class SetTimedQuizzesController:
         :param quiz_type: the type of quiz to open after the interval
         :return:
         """
-        self._quiz_type=quiz_type
-        self._num_words=int(num_words)
-        self._timer.setInterval(int(time_interval)*c.HOUR_TO_MILLISECOND)
-        self._timer.start()
+        try:
+            self._check_parameters(time_interval,num_words)
+            self._quiz_type=quiz_type
+            self._num_words=int(num_words)
+            self._timer.setInterval(int(time_interval)*c.HOUR_TO_MILLISECOND)
+            self._timer.start()
+        except ValueError as ve:
+            self._show_error_message(str(ve))
+
+
+
 
     def _create_quiz(self) -> None:
         """
@@ -51,4 +58,18 @@ class SetTimedQuizzesController:
             self._create_basic_quiz(self._num_words)
         if self._quiz_type=="Basic Quiz 2":
             self._create_basic_quiz2(self._num_words)
+
+    def _show_error_message(self, message):
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle("Error")
+        msg_box.setText(f"An error occurred: {message}")
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        msg_box.exec_()
+
+    def _check_parameters(self, time_interval : str, num_words: str):
+        if int(time_interval)<1 or int(time_interval)>24:
+            raise ValueError("time interval has to be between 1 and 24 hours")
+        if int(num_words)<1 or int(num_words)>50:
+            raise ValueError("number of words has to be between 1 and 50")
 

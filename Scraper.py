@@ -1,27 +1,44 @@
 from typing import Union, Tuple, List
-
 from bs4 import BeautifulSoup
 import requests
-import re
-
 from Exceptions import URLException
 
 
 class WebScraper:
+    """
+    A class for scraping definitions from the Merriam-Webster dictionary.
+    could use any other dictionary as long as its url is "website/word"
+    Methods
+    -------
+    add_word(self, name_word: str) -> List[Tuple[str, Union[str, int]]]:
+    function that gets the meanings of a word and examples if there are any and
+    return a list of tuples of meaning,example
+    """
 
-    def __init__(self , website_used : str="https://www.merriam-webster.com/dictionary/"):
-        self.website_used=website_used
+    def __init__(self, website_used: str = "https://www.merriam-webster.com/dictionary/"):
+        """
+        Initializes the WebScraper with the specified website.
+        :param website_used: The URL of the dictionary website.
+        """
+        self._website_used = website_used
 
-    def add_word(self , name_word: str)  -> List[Tuple[str, Union[str, int]]]:# [(),(),()..]
+    def read_word(self, name_word: str) -> List[Tuple[str, Union[str, int]]]:
+        """
+        Retrieves the meanings of the specified word from the dictionary website.
 
-        if name_word=="":
+        :param name_word: The word to look up in the dictionary.
+        :raises ValueError: If the provided word is an empty string.
+        :raises URLException: If the word is not found on the dictionary website.
+        :return: A list of tuples, where each tuple contains the meaning and an example sentence
+                 or 0 if no example is found. Format: [(meaning1, example1), (meaning2, example2), ...]
+        """
+        if name_word == "":
             raise ValueError("empty string is not a word")
-        url=self.website_used+name_word
+
+        url = self._website_used + name_word
         result = requests.get(url)
 
-
-        doc_web = BeautifulSoup(result.text,"html.parser")
-
+        doc_web = BeautifulSoup(result.text, "html.parser")
 
         definition = doc_web.find('div', class_='vg')
 
@@ -30,24 +47,16 @@ class WebScraper:
 
         meanings = definition.find_all('div', class_='vg-sseq-entry-item')
 
-
-
-        list_meanings=[]
+        list_meanings = []
         for meaning in meanings:
-
             submeanings = meaning.find_all('span', class_="dt")  # the smallest definition
             for submeaning in submeanings:
                 mean = submeaning.find('span', class_="dtText")
                 example_sent = submeaning.find('div', class_="sub-content-thread")
-                # rv[1]+=[mean.get_text()]
 
                 if example_sent:
-                    # rv[1] += [example_sent.get_text()]
-                    list_meanings.append((mean.get_text(),example_sent.get_text()))
-
+                    list_meanings.append((mean.get_text(), example_sent.get_text()))
                 else:
-                    list_meanings.append((mean.get_text(),0))
+                    list_meanings.append((mean.get_text(), 0))
 
         return list_meanings
-
-

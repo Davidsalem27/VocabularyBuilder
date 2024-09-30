@@ -1,111 +1,161 @@
 from PyQt5.QtCore import QTimer
-
-import Constants as c
+from Constants import Constants as c
 import MainMenuController
-import ManageWordsMenu
-import QuizMenu
 
 import sys
-import warnings
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QMessageBox
 from PyQt5.QtGui import QPalette, QBrush, QPixmap, QFont
 
-import SettingsMenu
-
 
 class MainMenu(QWidget):
-    def __init__(self, controller : MainMenuController,minimize,close_program,
-                 create_manage_words_menu,create_quiz_menu,create_settings_menu):
+    """Main menu for the Vocabulary Builder application.
+
+    This class provides buttons for managing words, taking quizzes, accessing settings,
+    and minimizing the application.
+
+    Fields:
+        _controller (MainMenuController): Controller for handling main menu logic.
+        _close_program (callable): Function to close the application.
+        _create_manage_words_menu (callable): Function to create the manage words menu.
+        _create_quiz_menu (callable): Function to create the quiz menu.
+        _create_settings_menu (callable): Function to create the settings menu.
+    Methods:
+        _set_background_image(self, image_path: str) -> None:
+            Sets the background image of the main menu.
+
+        _open_words_menu(self) -> None:
+            Opens the manage words menu.
+
+        _open_quiz_menu(self) -> None:
+            Opens the quiz menu.
+
+        _open_settings(self) -> None:
+            Opens the settings menu.
+
+        _function3(self) -> None:
+            Placeholder for additional functionality.
+
+        closeEvent(self, event) -> None:
+            Handles the close event to confirm exit.
+    """
+
+    def __init__(self, controller: MainMenuController, minimize: callable, close_program: callable,
+                 create_manage_words_menu: callable, create_quiz_menu: callable,
+                 create_settings_menu: callable) -> None:
+        """Initializes the main menu with buttons and layout.
+
+        :param controller: Controller for handling main menu logic.
+        :param minimize: Function to minimize the main window.
+        :param close_program: Function to close the application.
+        :param create_manage_words_menu: Function to create the manage words menu.
+        :param create_quiz_menu: Function to create the quiz menu.
+        :param create_settings_menu: Function to create the settings menu.
+        """
         super().__init__()
-        self.quiz_menu = None
-        self.controller=controller
-        self.words_menu=None
-        self.close_program=close_program
-        self.create_manage_words_menu=create_manage_words_menu
-        self.create_quiz_menu=create_quiz_menu
-        self.create_settings_menu=create_settings_menu
+        self._quiz_menu = None
+        self._controller = controller
+        self._words_menu = None
+        self._minimize = minimize
+        self._close_program = close_program
+        self._create_manage_words_menu = create_manage_words_menu
+        self._create_quiz_menu = create_quiz_menu
+        self._create_settings_menu = create_settings_menu
         self.setWindowTitle('Vocabulary Builder')
-        self.setGeometry(100, 100, 960, 640)
+        self.setGeometry(c.MAIN_MENU_POSX, c.MAIN_MENU_POSY,
+                         c.MAIN_MENU_WIDTH, c.MAIN_MENU_HEIGHT)
 
+        self._set_background_image(c.MAIN_MENU_IMAGE_PATH)
+        self.init_ui()  # Call to initialize UI components
 
-        self.set_background_image('960x0.webp')
+    def init_ui(self) -> None:
+        """Initializes the UI components including buttons and layout."""
+        self._button1 = QPushButton('Manage Words', self)
+        self._button1.clicked.connect(self._open_words_menu)
+        self._button1.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
+        self._button1.setFont(c.BUTTON_FONT)
 
-        self.button1 = QPushButton('Manage Words', self)
-        self.button1.clicked.connect(self.open_words_menu)
-        self.button1.setFixedSize(400, 200)
-        self.button1.setFont(c.BUTTON_FONT)
-        self.button2 = QPushButton('Quiz yourself!', self)
-        self.button2.clicked.connect(self.open_quiz_menu)
-        self.button2.setFixedSize(400, 200)
-        self.button2.setFont(c.BUTTON_FONT)
-        self.button3 = QPushButton('Other games', self)
-        self.button3.clicked.connect(self.function3)
-        self.button3.setFixedSize(400, 200)
-        self.button3.setFont(c.BUTTON_FONT)
-        self.button4 = QPushButton('Settings', self)
-        self.button4.clicked.connect(self.open_settings)
-        self.button4.setFixedSize(400, 200)
-        self.button4.setFont(c.BUTTON_FONT)
-        self.button5 = QPushButton('Minimize to tray', self)
-        self.button5.clicked.connect(minimize)
-        self.button5.setFixedSize(400, 200)
-        self.button5.setFont(c.BUTTON_FONT)
+        self._button2 = QPushButton('Quiz yourself!', self)
+        self._button2.clicked.connect(self._open_quiz_menu)
+        self._button2.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
+        self._button2.setFont(c.BUTTON_FONT)
+
+        self._button3 = QPushButton('Other games', self)
+        self._button3.clicked.connect(self._function3)
+        self._button3.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
+        self._button3.setFont(c.BUTTON_FONT)
+
+        self._button4 = QPushButton('Settings', self)
+        self._button4.clicked.connect(self._open_settings)
+        self._button4.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
+        self._button4.setFont(c.BUTTON_FONT)
+
+        self._button5 = QPushButton('Minimize to tray', self)
+        self._button5.clicked.connect(self._minimize)
+        self._button5.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
+        self._button5.setFont(c.BUTTON_FONT)
+
         layout = QVBoxLayout()
-        layout.addWidget(self.button1)
-        layout.addWidget(self.button2)
-        layout.addWidget(self.button3)
-        layout.addWidget(self.button4)
-        layout.addWidget(self.button5)
-
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.set_quiz_timer)  # Connect the timeout signal to the update_time method
-
+        layout.addWidget(self._button1)
+        layout.addWidget(self._button2)
+        layout.addWidget(self._button3)
+        layout.addWidget(self._button4)
+        layout.addWidget(self._button5)
 
         self.setLayout(layout)
 
-    def set_background_image(self, image_path):
+    def _set_background_image(self, image_path: str) -> None:
+        """Sets the background image of the main menu.
+
+        :param image_path: Path to the background image file.
+        :return: None
+        """
         oImage = QPixmap(image_path)
         sImage = oImage.scaled(self.size(), aspectRatioMode=1)
         palette = QPalette()
         palette.setBrush(QPalette.Window, QBrush(sImage))
         self.setPalette(palette)
 
-    def close_all_windows(self):
-        app = QApplication.instance()
-        for widget in app.topLevelWidgets():
-            if isinstance(widget, QWidget) and widget is not self:
-                widget.close()
-    def open_words_menu(self):
-        self.words_menu=self.create_manage_words_menu()
-        self.words_menu.show()
+    def _open_words_menu(self) -> None:
+        """Opens the manage words menu.
 
-    def open_quiz_menu(self):
-        self.quiz_menu=self.create_quiz_menu()
-        self.quiz_menu.show()
-    def open_settings(self):
-        self.settings_menu=self.create_settings_menu()
+        :return: None
+        """
+        self._words_menu = self._create_manage_words_menu()
+        self._words_menu.show()
 
+    def _open_quiz_menu(self) -> None:
+        """Opens the quiz menu.
+
+        :return: None
+        """
+        self._quiz_menu = self._create_quiz_menu()
+        self._quiz_menu.show()
+
+    def _open_settings(self) -> None:
+        """Opens the settings menu.
+
+        :return: None
+        """
+        self.settings_menu = self._create_settings_menu()
         self.settings_menu.show()
 
-    def function3(self):
+    def _function3(self) -> None:
+        """Placeholder for additional functionality.
+
+        :return: None
+        """
         print("Set Quiz timer")
 
-    def start_timer(self):
-        print("Settings")
-        self.timer.start(5000)
-        # self.time_label.setText("Timer started")
-    def set_quiz_timer(self):
-        quiz_menu_controller = self.controller.open_quiz_menu()
-        self.quiz_menu = QuizMenu.QuizMenu(quiz_menu_controller)
-        self.quiz_menu.open_basic_quiz_menu()
-    def stop_timer(self):
-        self.timer.stop()  # Stop the timer
+    def closeEvent(self, event) -> None:
+        """Handles the close event to confirm exit.
 
-    def closeEvent(self, event):
+        :param event: The close event.
+        :return: None
+        """
         reply = QMessageBox.question(self, 'Close Confirmation', 'Are you sure you want to close the program?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             event.accept()
-            self.close_program()
+            self._close_program()
         else:
             event.ignore()

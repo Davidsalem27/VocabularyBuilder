@@ -1,19 +1,85 @@
-#size of main menu
 from PyQt5.QtGui import QFont
 
-HOUR_TO_MILLISECOND= 60 * 60 * 1000
 
-SIZE_MAIN_MENU = "600x400"
-#size of quiz_menu
+class Constants:
 
 
-TITLE_MAIN_MENU = "English vocabulary builder"
+    #MAIN MENU CONSTANTS
+    MAIN_MENU_POSX = 100
+    MAIN_MENU_POSY = 100
+    MAIN_MENU_WIDTH = 960
+    MAIN_MENU_HEIGHT = 640
+    MAIN_MENU_IMAGE_PATH = '960x0.webp'
+    MAIN_MENU_BUTTON_WIDTH = 400
+    MAIN_MENU_BUTTON_HEIGHT=200
+    TITLE_MAIN_MENU = "English vocabulary builder"
 
-#starting weight for words in the database
-STARTING_WEIGHT = 10
+    #manage words menu consts
+    MANAGE_WORDS_MENU_POSX = 400
+    MANAGE_WORDS_MENU_POSY = 200
+    MANAGE_WORDS_MENU_WIDTH = 800
+    MANAGE_WORDS_MENU_HEIGHT = 800
+    MANAGE_WORDS_MENU_BUTTON_WIDTH = 600
+    MANAGE_WORDS_MENU_BUTTON_HEIGHT = 100
+    MANAGE_WORDS_BUTTON_FONT = QFont("Arial", 24)
 
-#path to the local text file
-FILE_PATH = "ListWords.txt"
+    #quiz menu const
+    QUIZ_MENU_POSX = 100
+    QUIZ_MENU_POSY = 100
+    QUIZ_MENU_HEIGHT = 800
+    QUIZ_MENU_WIDTH = 800
+    QUIZ_MENU_BUTTON_WIDTH = 800
+    QUIZ_MENU_BUTTON_HEIGHT = 100
+    QUIZ_MENU_BUTTON_FONT = QFont("Arial", 24)
 
-#font for buttons
-BUTTON_FONT = QFont("Arial", 30)  # Font family, Font size
+    #set timed quiz menu consts
+    SET_TIMED_QUIZ_MENU_POSX = 100
+    SET_TIMED_QUIZ_MENU_POSY = 100
+    SET_TIMED_QUIZ_MENU_WIDTH = 800
+    SET_TIMED_QUIZ_MENU_HEIGHT = 600
+    SET_TIMED_QUIZ_BUTTON_WIDTH = 300
+    SET_TIMED_QUIZ_BUTTON_HEIGHT = 100
+    SET_TIMED_QUIZ_ENTRY_WIDTH = 400
+    SET_TIMED_QUIZ_ENTRY_HEIGHT = 100
+    SET_TIMED_QUIZ_FONT = QFont("Arial", 20)
+
+    #show words menu const
+    SHOW_WORDS_MENU_POSX = 100
+    SHOW_WORDS_MENU_POSY = 100
+    SHOW_WORDS_MENU_HEIGHT = 600
+    SHOW_WORDS_MENU_WIDTH = 800
+    SHOW_WORDS_MENU_FONT = QFont("Arial", 16)
+
+    #word meaning window const
+    WORD_MEANING_WINDOW_POSX = 200
+    WORD_MEANING_WINDOW_POSY = 200
+    WORD_MEANING_WINDOW_WIDTH = 600
+    WORD_MEANING_WINDOW_HEIGHT = 600
+    WORD_MEANING_FONT = QFont("Arial", 18)
+
+    ##BASIC QUIZ MENU CONSTANTS
+    BASIC_QUIZ_MENU_WIDTH = 1000
+    BASIC_QUIZ_MENU_HEIGHT = 800
+    BASIC_QUIZ_MENU_POSX = 100
+    BASIC_QUIZ_MENU_POSY = 100
+    BASIC_QUIZ_MENU_BUTTON_WIDTH=150
+    BASIC_QUIZ_MENU_BUTTON_HEIGHT=100
+    BASIC_QUIZ_WORD_LABEL_STYLE = "font-size: 30px;"
+    BASIC_QUIZ_MEANING_EXAMPLE_LABEL_STYLE = "font-size: 16px;"
+    #traybar const
+    TRAY_IMAGE_PATH="960x0.webp"
+
+    #starting weight for words in the database
+    STARTING_WEIGHT = 10
+    #default number of words in a quiz
+    DEFAULT_NUM_WORDS=5
+    #path to the local text file
+    FILE_PATH = "ListWords.txt"
+    #default path to local database
+    DATABASE_PATH="words.db"
+    #font for buttons
+    BUTTON_FONT = QFont("Arial", 30)  # Font family, Font size
+
+    #hour to millisecond
+    HOUR_TO_MILLISECOND= 60 * 60 * 1000
+

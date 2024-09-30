@@ -1,17 +1,15 @@
 
-import QuizMenuController
-import SettingsController
-import SettingsLoader
+
 import WordManager as wm
-import ManageWordsController
+
 
 
 class MainMenuController:
     """
-    the main menu controller of the model-view-controller design pattern
+    the main menu controller, right now is does nothing but maybe in future
     """
     def __init__(self,word_manager : wm.WordManager):
-        self.word_manager=word_manager
+        self._word_manager=word_manager
 
 
 
