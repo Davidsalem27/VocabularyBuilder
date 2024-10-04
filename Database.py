@@ -4,6 +4,7 @@ import sqlite3
 import Word
 from Constants import Constants as c
 
+
 class DatabaseManager:
     """
     Database_Manager provides an interface for managing a SQLite database
@@ -63,9 +64,33 @@ class DatabaseManager:
         """)
         self._connection.commit()
 
+    def _get_word_id(self, word: str) -> int | None:
+        """
+        get the word id in the words table of a word
+        :param word: the word to look for
+        :return: the row id of it
+        """
+        query = "SELECT id FROM words WHERE word = ?;"
+        self._cursor.execute(query, (word,))
+
+        result = self._cursor.fetchone()  # Fetch the result (if any)
+        if result:
+            return result[0]  # Return the ID if found
+        return None
+
+    def get_meanings_excluding_word(self, word: str) -> list[str]:
+        print(word)
+        self._cursor.execute("SELECT meaning FROM meanings WHERE word_id != ? "
+                             "ORDER BY RANDOM() LIMIT 4;",
+                             (self._get_word_id(word),))
+
+        meanings = self._cursor.fetchall()  # Fetch all the results
+        return [meaning[0] for meaning in meanings]
+
     def insert_word(self, word: Word.Word) -> None:
         """
-        Inserts a new word and its meanings into the database.
+        Inserts a new word and its meanings into the database. makes it lowercase
+        to avoid bugs
 
         If the word already exists, it does nothing.
 
@@ -77,7 +102,7 @@ class DatabaseManager:
 
         self._cursor.execute(
             "INSERT OR IGNORE INTO words (word, weight) VALUES (?, ?);",
-            (word.name, word.weight)
+            (word.name.lower(), word.weight)
         )
         self._connection.commit()
 
@@ -105,7 +130,7 @@ class DatabaseManager:
         :return: None
         """
         if not self.word_exists(word):
-            raise ValueError(f"{word} doesn't exist in the database")
+            raise ValueError()
         self._cursor.execute("DELETE FROM words WHERE word = ?", (word,))
         self._connection.commit()
 
@@ -120,7 +145,7 @@ class DatabaseManager:
         :return: None
         """
         if not self.word_exists(word):
-            raise ValueError(f"{word} doesn't exist in the database")
+            raise ValueError()
         self._cursor.execute("UPDATE words SET weight = weight + ? WHERE word = ?", (increment, word))
         self._connection.commit()
 
@@ -133,23 +158,7 @@ class DatabaseManager:
         self._cursor.execute("SELECT word, weight FROM words;")
         return self._cursor.fetchall()
 
-    def fetch_random_weighted_words(self, n: int, sample_size: int) -> list[tuple[str, int]]:
-        """
-        Fetches a sample of words based on their weights.
 
-        Retrieves the top n weighted words and samples a specified number from them.
-
-        :param n: The number of top-weighted words to consider.
-        :param sample_size: The number of random words to return.
-        :return: A list of randomly selected words from the top weighted words.
-        """
-        self._cursor.execute("SELECT word, weight FROM words ORDER BY weight DESC LIMIT ?", (n,))
-        top_weighted_words = self._cursor.fetchall()
-
-        if len(top_weighted_words) <= sample_size:
-            return top_weighted_words
-        else:
-            return random.sample(top_weighted_words, sample_size)
 
     def get_meanings_of_word(self, word_name: str) -> list[tuple[str, list[str]]]:
         """

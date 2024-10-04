@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QApplication, QWidget
 import BasicQuizController
 import BasicQuizMenu
 import ManageWordsMenu
+import MulitChoiceQuizMenu
+import MutliChoiceQuizController
 import QuizMenu
 import QuizMenuController
 import SetTimedQuizzesController
@@ -62,17 +64,10 @@ class ControllerMenuFactory:
         :return: The created quiz menu.
         """
         quiz_menu_controller = QuizMenuController.QuizMenuController(self.word_manager)
-        return QuizMenu.QuizMenu(quiz_menu_controller, self.create_basic_quiz_menu, self.create_timed_quiz_menu)
+        return QuizMenu.QuizMenu(quiz_menu_controller, self.create_basic_quiz_menu,
+                                 self.create_timed_quiz_menu,self.create_multichoice_quiz)
 
-    def create_basic_quiz_menu(self, num_words_in_quiz=c.DEFAULT_NUM_WORDS) -> BasicQuizMenu.BasicQuizMenu:
-        """Creates the basic quiz menu with its controller.
 
-        :param num_words_in_quiz: Number of words to include in the quiz.
-        default is 5
-        :return: The created basic quiz menu.
-        """
-        basic_quiz_controller = BasicQuizController.BasicQuizController(self.word_manager)
-        return BasicQuizMenu.BasicQuizMenu(basic_quiz_controller, num_words_in_quiz)
 
     def create_settings_menu(self) -> SettingsMenu.SettingsMenu:
         """Creates the settings menu with its controller.
@@ -90,10 +85,28 @@ class ControllerMenuFactory:
         show_words_controller = ShowWordsController.ShowWordsController(self.word_manager)
         return ShowWordsMenu.ShowWordsMenu(show_words_controller)
 
-    def create_timed_quiz_menu(self) -> SetTimedQuizzesMenu.SetTimedQuizzesMenu:
+    def create_timed_quiz_menu(self, num_words: int =c.DEFAULT_NUM_WORDS) -> SetTimedQuizzesMenu.SetTimedQuizzesMenu:
         """Creates the timed quiz menu with its controller.
 
         :return: The created timed quiz menu.
         """
-        controller = SetTimedQuizzesController.SetTimedQuizzesController(self.create_basic_quiz_menu, None)
+        controller = SetTimedQuizzesController.SetTimedQuizzesController(self.create_basic_quiz_menu,
+                                                                         self.create_multichoice_quiz)
         return SetTimedQuizzesMenu.SetTimedQuizzesMenu(controller)
+
+    def create_basic_quiz_menu(self, num_words: int =c.DEFAULT_NUM_WORDS) -> BasicQuizMenu.BasicQuizMenu:
+        """Creates the basic quiz menu with its controller.
+
+        :param num_words: Number of words to include in the quiz.
+        :return: The created basic quiz menu.
+        """
+        basic_quiz_controller = BasicQuizController.BasicQuizController(self.word_manager)
+        return BasicQuizMenu.BasicQuizMenu(basic_quiz_controller, num_words)
+
+    def create_multichoice_quiz(self, num_words: int =c.DEFAULT_NUM_WORDS) ->MulitChoiceQuizMenu.MultipleChoiceQuizMenu:
+        """Creates the multichoice quiz menu with its controller.
+
+        :return: The created multichoice quiz menu.
+        """
+        controller=MutliChoiceQuizController.MultiChoiceQuizController(self.word_manager)
+        return MulitChoiceQuizMenu.MultipleChoiceQuizMenu(controller, num_words)

@@ -1,4 +1,7 @@
+import random
+
 import Database as db
+from typing import List, Tuple
 
 import WordFactory
 from Constants import Constants as c
@@ -137,3 +140,45 @@ class WordManager:
         :return: A list of tuples, each containing a word and its weight.
         """
         return self._database.get_all_words()
+    def get_meanings_excluding_word(self,word: str) -> list[str]:
+        return self._database.get_meanings_excluding_word(word)
+
+    def get_n_random_heaviest_words(self, n: int):
+        words = self._database.get_all_words()
+        sorted_words_weights = sorted(words, key=lambda x: x[1], reverse=True)
+        return self._get_n_random_words_weight(n, sorted_words_weights)
+
+
+    def _get_n_random_words_weight(self, n: int, sorted_words_weights: list[tuple[str, int]]) -> List[str]:
+        """
+        Selects n random words from the sorted list of words based on their weights.
+
+        The method ensures that words of the same weight are handled together to maintain randomness.
+
+        :param n: The number of random words to select.
+        :param sorted_words_weights: A list of tuples containing words and their weights, sorted by weight.
+        :return: A list of n randomly selected words.
+        """
+        max_weight = 0
+        tmp_lst = []
+        randomized_lst = []
+
+        for i in range(len(sorted_words_weights)):
+            if len(randomized_lst) == n:
+                break
+            if max_weight == sorted_words_weights[i][1]:
+                continue
+
+            max_weight = sorted_words_weights[i][1]
+            for j in range(len(sorted_words_weights) - i):
+                if sorted_words_weights[i + j][1] == max_weight:
+                    tmp_lst.append(sorted_words_weights[i + j][0])
+                else:
+                    break
+
+            sample_size = min(n - len(randomized_lst), len(tmp_lst))
+            randomized_lst += random.sample(tmp_lst, sample_size)
+            tmp_lst.clear()
+
+        return randomized_lst
+

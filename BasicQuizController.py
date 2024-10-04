@@ -39,10 +39,10 @@ class BasicQuizController:
         :param n: The number of definitions to retrieve.
         :return: A list of tuples where each tuple contains a word and its corresponding definitions.
         """
-        words = self._word_manager.get_all_words_weight()
-        sorted_words_weights = sorted(words, key=lambda x: x[1], reverse=True)
-        randomized_lst = self._get_n_random_words_weight(n, sorted_words_weights)
-
+        # words = self._word_manager.get_all_words_weight()
+        # sorted_words_weights = sorted(words, key=lambda x: x[1], reverse=True)
+        # randomized_lst = self._get_n_random_words_weight(n, sorted_words_weights)
+        randomized_lst=self._word_manager.get_n_random_heaviest_words(n)
         definitions = []
         for word in randomized_lst:
             definitions.append((word, self._word_manager.get_meanings(word)))
@@ -86,19 +86,25 @@ class BasicQuizController:
         """
         Updates the difficulty weight of a word to make it easier.
 
-        This method decreases the weight of the specified word, indicating
-        that it should be considered easier in future quizzes.
+        This method decreases the weight of the specified word by 2
+
+        :param word: The word to be updated.
+        """
+        self._word_manager.update_weight(word, -2)
+    def update_word_mid(self,word: str) -> None:
+        """
+        Updates the difficulty weight of a word to make it easier.
+
+        This method decreases the weight of the specified word by 1
 
         :param word: The word to be updated.
         """
         self._word_manager.update_weight(word, -1)
-
     def update_word_hard(self, word: str) -> None:
         """
         Updates the difficulty weight of a word to make it harder.
 
-        This method increases the weight of the specified word, indicating
-        that it should be considered harder in future quizzes.
+        This method increases the weight of the specified word by 1
 
         :param word: The word to be updated.
         """

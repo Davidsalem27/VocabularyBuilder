@@ -12,6 +12,7 @@ class MainMenu(QWidget):
 
     This class provides buttons for managing words, taking quizzes, accessing settings,
     and minimizing the application.
+    currently the settings and othergames options dont do anything
 
     Fields:
         _controller (MainMenuController): Controller for handling main menu logic.
@@ -60,10 +61,9 @@ class MainMenu(QWidget):
         self._create_manage_words_menu = create_manage_words_menu
         self._create_quiz_menu = create_quiz_menu
         self._create_settings_menu = create_settings_menu
-        self.setWindowTitle('Vocabulary Builder')
+        self.setWindowTitle(c.TITLE_MAIN_MENU)
         self.setGeometry(c.MAIN_MENU_POSX, c.MAIN_MENU_POSY,
                          c.MAIN_MENU_WIDTH, c.MAIN_MENU_HEIGHT)
-
         self._set_background_image(c.MAIN_MENU_IMAGE_PATH)
         self.init_ui()  # Call to initialize UI components
 
@@ -79,15 +79,15 @@ class MainMenu(QWidget):
         self._button2.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
         self._button2.setFont(c.BUTTON_FONT)
 
-        self._button3 = QPushButton('Other games', self)
-        self._button3.clicked.connect(self._function3)
-        self._button3.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
-        self._button3.setFont(c.BUTTON_FONT)
+        self._other_games_button = QPushButton('Other games', self)
+        self._other_games_button.clicked.connect(self._other_games)
+        self._other_games_button.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH, c.MAIN_MENU_BUTTON_HEIGHT)
+        self._other_games_button.setFont(c.BUTTON_FONT)
 
-        self._button4 = QPushButton('Settings', self)
-        self._button4.clicked.connect(self._open_settings)
-        self._button4.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH,c.MAIN_MENU_BUTTON_HEIGHT)
-        self._button4.setFont(c.BUTTON_FONT)
+        # self._setting_button = QPushButton('Settings', self)
+        # self._setting_button.clicked.connect(self._open_settings)
+        # self._setting_button.setFixedSize(c.MAIN_MENU_BUTTON_WIDTH, c.MAIN_MENU_BUTTON_HEIGHT)
+        # self._setting_button.setFont(c.BUTTON_FONT)
 
         self._button5 = QPushButton('Minimize to tray', self)
         self._button5.clicked.connect(self._minimize)
@@ -97,8 +97,8 @@ class MainMenu(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self._button1)
         layout.addWidget(self._button2)
-        layout.addWidget(self._button3)
-        layout.addWidget(self._button4)
+        layout.addWidget(self._other_games_button)
+        # layout.addWidget(self._setting_button)
         layout.addWidget(self._button5)
 
         self.setLayout(layout)
@@ -133,18 +133,18 @@ class MainMenu(QWidget):
 
     def _open_settings(self) -> None:
         """Opens the settings menu.
-
+        there is the base of an implementation of this feature for future needs
+        but right now it does nothing
         :return: None
         """
         self.settings_menu = self._create_settings_menu()
         self.settings_menu.show()
 
-    def _function3(self) -> None:
+    def _other_games(self) -> None:
         """Placeholder for additional functionality.
-
         :return: None
         """
-        print("Set Quiz timer")
+        pass
 
     def closeEvent(self, event) -> None:
         """Handles the close event to confirm exit.

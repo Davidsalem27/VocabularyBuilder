@@ -11,6 +11,7 @@ class BasicQuizMenu(QWidget):
 
     This class creates a window and when the next or prev buttons are pressed a new one
     is created. users can reveal meanings and rate the difficulty of the words.
+    every meaning can be revealed once per quiz
     """
 
     def __init__(self, controller: BasicQuizController.BasicQuizController, num_words: int):
@@ -24,7 +25,7 @@ class BasicQuizMenu(QWidget):
         self._num_words = num_words
         self._controller = controller
         self._current_window_index = 0
-
+        self.meanings_revealed=[False]*num_words
         self._current_word = ""
         self._current_meaning = None
         self._definitions = self._controller.get_n_definitions(self._num_words)
@@ -64,7 +65,7 @@ class BasicQuizMenu(QWidget):
         button_layout.addWidget(self._next_button)
 
         self._reveal_button = QPushButton("Reveal meaning!", self)
-        self._reveal_button.clicked.connect(self._reveal_meaning)
+        self._reveal_button.clicked.connect(self._reveal_check)
         self._reveal_button.setFixedSize(c.BASIC_QUIZ_MENU_BUTTON_WIDTH,
                                        c.BASIC_QUIZ_MENU_BUTTON_HEIGHT)
         button_layout.addWidget(self._reveal_button)
@@ -75,7 +76,13 @@ class BasicQuizMenu(QWidget):
                                        c.BASIC_QUIZ_MENU_BUTTON_HEIGHT)
         button_layout.addWidget(self._easy_button)
 
-        self._hard_button = QPushButton("Hard", self)
+        self._mid_button = QPushButton("almost got it", self)
+        self._mid_button.clicked.connect(lambda: self._mid_word(self._current_word))
+        self._mid_button.setFixedSize(c.BASIC_QUIZ_MENU_BUTTON_WIDTH,
+                                       c.BASIC_QUIZ_MENU_BUTTON_HEIGHT)
+        button_layout.addWidget(self._mid_button)
+
+        self._hard_button = QPushButton("no idea", self)
         self._hard_button.clicked.connect(lambda: self._hard_word(self._current_word))
         self._hard_button.setFixedSize(c.BASIC_QUIZ_MENU_BUTTON_WIDTH,
                                        c.BASIC_QUIZ_MENU_BUTTON_HEIGHT)
@@ -89,25 +96,36 @@ class BasicQuizMenu(QWidget):
     def _create_window(self) -> None:
         """
         Creates and displays the current word and its layout in the UI.
+        every meaning can be revealed once
         """
-        # Clear previous widgets in scroll area
-        for i in reversed(range(self._scroll_layout.count())):
-            widget = self._scroll_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.deleteLater()
-
+        self._clear_ui()
         word_label = QLabel("", self)
         self._current_word = self._definitions[self._current_window_index][0]
         word_label.setText(self._current_word)
 
         word_label.setStyleSheet(c.BASIC_QUIZ_WORD_LABEL_STYLE)
         self._scroll_layout.addWidget(word_label, alignment=Qt.AlignCenter)
-
+        if self.meanings_revealed[self._current_window_index]:
+            self._reveal_meaning()
+    def _clear_ui(self):
+        for i in reversed(range(self._scroll_layout.count())):
+            widget = self._scroll_layout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+    def _reveal_check(self) -> None:
+        """
+        checks if the meaning was already revealed to avoid duplicate
+        """
+        if self.meanings_revealed[self._current_window_index]:
+            pass
+        else:
+            self._reveal_meaning()
     def _reveal_meaning(self) -> None:
         """
         shows the meanings and examples of the current word on screen after the user
         clicks the reveal meanings button
         """
+        self.meanings_revealed[self._current_window_index]=True
         current_meaning = self._definitions[self._current_window_index][1]
 
         for index, (meaning, example) in enumerate(current_meaning):
@@ -129,6 +147,13 @@ class BasicQuizMenu(QWidget):
         :param word: The word to be rated as easy.
         """
         self._controller.update_word_easy(word)
+    def _mid_word(self, word: str) -> None:
+        """
+        Updates the difficulty weight of a word to make it easier.
+
+        :param word: The word to be rated as easy.
+        """
+        self._controller.update_word_mid(word)
 
     def _hard_word(self, word: str) -> None:
         """

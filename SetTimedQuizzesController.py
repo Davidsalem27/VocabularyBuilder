@@ -14,11 +14,11 @@ class SetTimedQuizzesController:
     open_quiz(self, time_interval : str, num_words: str, quiz_type: str) -> None:
         starts the timer with the parameters the user chose in the menu
     """
-    def __init__(self,create_basic_quiz,create_basic_quiz2):
+    def __init__(self, create_basic_quiz, create_multichoice_quiz):
 
         self._num_words = None
         self._create_basic_quiz=create_basic_quiz
-        self._create_basic_quiz2=create_basic_quiz2
+        self._create_multi_choice_quiz=create_multichoice_quiz
         self._timer = QTimer()
         self._quiz_type=None
         self._timer.timeout.connect(self._create_quiz)
@@ -56,8 +56,8 @@ class SetTimedQuizzesController:
         """
         if self._quiz_type=="Basic Quiz":
             self._create_basic_quiz(self._num_words)
-        if self._quiz_type=="Basic Quiz 2":
-            self._create_basic_quiz2(self._num_words)
+        if self._quiz_type=="Multiple Choice Quiz":
+            self._create_multi_choice_quiz(self._num_words)
 
     def _show_error_message(self, message):
         msg_box = QMessageBox()

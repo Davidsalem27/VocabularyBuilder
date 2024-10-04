@@ -92,7 +92,9 @@ class ManageWordsMenu(QWidget):
         # Label to display output
         self._output_label = QLabel('', self)
         layout.addWidget(self._output_label)
-        self._output_label.setFixedSize(400, 100) #to change
+        self._output_label.setFixedSize(c.MANAGE_WORDS_MENU_OUTPUT_WIDTH,
+                                        c.MANAGE_WORDS_MENU_OUTPUT_HEIGHT) #to change
+
         self._output_label.setFont(c.MANAGE_WORDS_BUTTON_FONT)
 
         self.setLayout(layout)

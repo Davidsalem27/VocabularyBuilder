@@ -32,9 +32,12 @@ class SetTimedQuizzesMenu(QWidget):
 
         # Dropdown menu
         self._quiz_type = QComboBox()
-        self._quiz_type.addItems(["Basic Quiz", "Basic Quiz 2"])
+        self._quiz_type.addItems(["Basic Quiz", "Multiple Choice Quiz"])
         self._quiz_type.setFont(c.SET_TIMED_QUIZ_FONT)
-        self._layout.addWidget(QLabel("Select a Quiz:"))
+        self._label_select=QLabel("Select a Quiz:")
+        self._label_select.setFont(c.SET_TIMED_QUIZ_FONT)
+        self._layout.addWidget(self._label_select)
+
         self._layout.addWidget(self._quiz_type)
 
         # Entry fields with labels

@@ -1,3 +1,4 @@
+from PyQt5.QtWidgets import QMessageBox
 
 import WordManager as wm
 import Exceptions
@@ -44,7 +45,7 @@ class ManageWordsController:
         try:
             self._word_manager.add_words_from_textfile()
         except Exceptions.URLException as e:
-            return "Problem with the word " + str(e) + ", maybe spelling is wrong?"
+            self._show_error_message("Problem with the word " + str(e) + ", maybe spelling is wrong?")
         else:
             return "Text file loaded successfully"
 
@@ -65,9 +66,9 @@ class ManageWordsController:
             self._word_manager.add_word(new_word)
             return f'Word added to database: {new_word}'
         except Exceptions.URLException:
-            return "Problem with adding " + new_word + ", please check spelling."
+            self._show_error_message("Problem with adding " + new_word + ", please check spelling.")
         except ValueError:
-            return "Please write a word before trying to add."
+            self._show_error_message("Please write a word before trying to add.")
 
     def get_all_words(self) -> list[str]:
         """
@@ -86,6 +87,15 @@ class ManageWordsController:
         """
         try:
             self._word_manager.delete_word(word)
-        except ValueError as e:
-            return str(e)
-        return word + " deleted successfully"
+            return word + " deleted successfully"
+        except ValueError:
+            self._show_error_message(word + " Not in Database")
+
+    def _show_error_message(self, message):
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle("Error")
+        msg_box.setText(f"An error occurred: {message}")
+        msg_box.setIcon(QMessageBox.Critical)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        msg_box.exec_()
+
