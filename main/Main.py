@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 from menus_and_controllers import ControllerMenuFactory
 from main import TrayBar
-from main.Constants import Constants as c
+
 
 
 class MainApp:
