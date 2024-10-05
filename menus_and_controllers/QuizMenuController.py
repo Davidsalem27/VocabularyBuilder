@@ -1,5 +1,6 @@
+from database import WordManager as wm
 
-import WordManager as wm
+
 class QuizMenuController:
     """
      Controller for the quiz menu controller. right now it does nothing, may add functionality

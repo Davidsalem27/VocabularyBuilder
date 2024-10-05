@@ -1,10 +1,10 @@
 import random
 
-import Database as db
-from typing import List, Tuple
+from database import Database as db
+from typing import List
 
-import WordFactory
-from Constants import Constants as c
+from database import WordFactory
+from main.Constants import Constants as c
 
 
 class WordManager:
@@ -76,7 +76,7 @@ class WordManager:
         :param name: The name of the word to be added.
         :return: True if the word is added successfully, False otherwise.
         """
-        new_word = self._word_factory.create_word_web(name)
+        new_word = self._word_factory.create_word_web(name.lower())
         self._database.insert_word(new_word)
 
 

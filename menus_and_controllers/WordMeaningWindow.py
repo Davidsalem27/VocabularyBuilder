@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
 
-from Constants import Constants as c
+from main.Constants import Constants as c
 class WordMeaningWindow(QWidget):
     """
     Window for displaying the details and meanings of a specific word.

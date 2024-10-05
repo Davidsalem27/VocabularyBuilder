@@ -1,4 +1,5 @@
-import WordManager as wm
+from database import WordManager as wm
+
 
 class ShowWordsController:
     """

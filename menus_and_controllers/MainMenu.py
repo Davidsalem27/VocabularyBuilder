@@ -1,10 +1,12 @@
-from PyQt5.QtCore import QTimer
-from Constants import Constants as c
-import MainMenuController
+# from PIL import ImageQt
 
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QMessageBox
-from PyQt5.QtGui import QPalette, QBrush, QPixmap, QFont
+from PyQt5 import QtGui
+
+from main.Constants import Constants as c
+from menus_and_controllers import MainMenuController
+from main import ImageLoader
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QMessageBox
+from PyQt5.QtGui import QPalette, QBrush, QPixmap
 
 
 class MainMenu(QWidget):
@@ -64,6 +66,7 @@ class MainMenu(QWidget):
         self.setWindowTitle(c.TITLE_MAIN_MENU)
         self.setGeometry(c.MAIN_MENU_POSX, c.MAIN_MENU_POSY,
                          c.MAIN_MENU_WIDTH, c.MAIN_MENU_HEIGHT)
+
         self._set_background_image(c.MAIN_MENU_IMAGE_PATH)
         self.init_ui()  # Call to initialize UI components
 

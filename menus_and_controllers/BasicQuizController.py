@@ -1,6 +1,6 @@
-import WordManager as wm
+from database import WordManager as wm
 import random
-from typing import List, Tuple
+from typing import List
 
 
 class BasicQuizController:

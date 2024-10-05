@@ -2,16 +2,14 @@ from PyQt5.QtGui import QFont
 
 
 class Constants:
-
-
     #MAIN MENU CONSTANTS
     MAIN_MENU_POSX = 100
     MAIN_MENU_POSY = 100
-    MAIN_MENU_WIDTH = 960
-    MAIN_MENU_HEIGHT = 640
-    MAIN_MENU_IMAGE_PATH = '960x0.webp'
+    MAIN_MENU_WIDTH = 1200
+    MAIN_MENU_HEIGHT = 800
+    MAIN_MENU_IMAGE_PATH = 'assets/960x0.webp'
     MAIN_MENU_BUTTON_WIDTH = 400
-    MAIN_MENU_BUTTON_HEIGHT=150
+    MAIN_MENU_BUTTON_HEIGHT = 150
     TITLE_MAIN_MENU = "English vocabulary builder"
 
     #manage words menu consts
@@ -33,10 +31,10 @@ class Constants:
     QUIZ_MENU_BUTTON_WIDTH = 800
     QUIZ_MENU_BUTTON_HEIGHT = 100
     QUIZ_MENU_BUTTON_FONT = QFont("Arial", 24)
-    QUIZ_MENU_SLIDER_WIDTH=800
-    QUIZ_MENU_SLIDER_HEIGHT=50
-    QUIZ_MENU_MAX_WORDS=20
-    QUIZ_MENU_MIN_WORDS=5
+    QUIZ_MENU_SLIDER_WIDTH = 800
+    QUIZ_MENU_SLIDER_HEIGHT = 50
+    QUIZ_MENU_MAX_WORDS = 20
+    QUIZ_MENU_MIN_WORDS = 5
 
     #set timed quiz menu consts
     SET_TIMED_QUIZ_MENU_POSX = 100
@@ -68,8 +66,8 @@ class Constants:
     BASIC_QUIZ_MENU_HEIGHT = 800
     BASIC_QUIZ_MENU_POSX = 100
     BASIC_QUIZ_MENU_POSY = 100
-    BASIC_QUIZ_MENU_BUTTON_WIDTH=150
-    BASIC_QUIZ_MENU_BUTTON_HEIGHT=100
+    BASIC_QUIZ_MENU_BUTTON_WIDTH = 150
+    BASIC_QUIZ_MENU_BUTTON_HEIGHT = 100
     BASIC_QUIZ_WORD_LABEL_STYLE = "font-size: 30px;"
     BASIC_QUIZ_MEANING_EXAMPLE_LABEL_STYLE = "font-size: 16px;"
 
@@ -79,26 +77,28 @@ class Constants:
     MULTI_CHOICE_QUIZ_POSY = 100
     MULTI_CHOICE_QUIZ_WIDTH = 1400
     MULTI_CHOICE_QUIZ_HEIGHT = 800
-    MULTI_CHOICE_QUIZ_BUTTON_WIDTH=150
-    MULTI_CHOICE_QUIZ_BUTTON_HEIGHT=100
+    MULTI_CHOICE_QUIZ_BUTTON_WIDTH = 150
+    MULTI_CHOICE_QUIZ_BUTTON_HEIGHT = 100
     MULTI_CHOICE_BUTTON_FONT = QFont("Arial", 20)
     MULTI_CHOICE_QUESTION_FONT = QFont("Arial", 16)
-    MULTI_CHOICE_NUM_OPTIONS=5
+    MULTI_CHOICE_NUM_OPTIONS = 5
 
     #traybar const
-    TRAY_IMAGE_PATH="960x0.webp"
+    TRAY_IMAGE_PATH = "assets/960x0.webp"
 
     #starting weight for words in the database
     STARTING_WEIGHT = 10
     #default number of words in a quiz
-    DEFAULT_NUM_WORDS=5
+    DEFAULT_NUM_WORDS = 5
     #path to the local text file
-    FILE_PATH = "ListWords.txt"
+    FILE_PATH = "assets/ListWords.txt"
     #default path to local database
-    DATABASE_PATH="words.db"
+    DATABASE_PATH = "assets/words.db"
     #font for buttons
     BUTTON_FONT = QFont("Arial", 30)  # Font family, Font size
 
     #hour to millisecond
-    HOUR_TO_MILLISECOND= 60 * 60 * 1000
+    HOUR_TO_MILLISECOND = 60 * 60 * 1000
 
+    #scraper website
+    SCRAPER_URL = "https://www.merriam-webster.com/dictionary/"

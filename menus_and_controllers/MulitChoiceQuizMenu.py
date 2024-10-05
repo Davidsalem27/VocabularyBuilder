@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QRadioButton, QPushButton, QMessageBox, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QRadioButton, QPushButton
 
-import MutliChoiceQuizController
-from Constants import Constants as c
+from menus_and_controllers import MutliChoiceQuizController
+from main.Constants import Constants as c
 
 
 class MultipleChoiceQuizMenu(QWidget):
@@ -39,7 +39,7 @@ class MultipleChoiceQuizMenu(QWidget):
 
         """
         super().__init__()
-        self._option_buttons= []
+        self._option_buttons = []
         self._next_button = None
         self._submit_button = None
         self._prev_button = None
@@ -49,9 +49,12 @@ class MultipleChoiceQuizMenu(QWidget):
                          c.MULTI_CHOICE_QUIZ_WIDTH, c.MULTI_CHOICE_QUIZ_HEIGHT)
         self._layout = QVBoxLayout()
         self._controller = controller
+
         # self.questions is [(word,[options],ind of correct answer])..]
         self._questions = self._controller.get_questions(num_questions)
         self._curr_question_ind = 0
+        self._prev_answers = [[None] * 5 for question in range(num_questions)]
+        self._error_lst = [True] * num_questions
         self._init_ui()
 
     def _init_ui(self) -> None:
@@ -100,27 +103,63 @@ class MultipleChoiceQuizMenu(QWidget):
             button.setFont(c.MULTI_CHOICE_QUESTION_FONT)
             self._layout.addWidget(button)
             self._option_buttons.append(button)
+        self._mark_prev_answers()
 
     def _check_answer(self) -> None:
-        """Check the selected answer and provide feedback."""
-        selected_option_index = None
+        """
+        function that is called when user clicks submit. checks if the answer the user
+        submit is correct and marks it accordingly.
+        if the user submits without picking anything nothing happens
+        :return: None
+        """
+        marked_ind = None
         for i, button in enumerate(self._option_buttons):
             if button.isChecked():
-                selected_option_index = i
-        print(selected_option_index)
-        print(self._questions[self._curr_question_ind][2])
-        if selected_option_index is not None:
-            if selected_option_index == self._questions[self._curr_question_ind][2]:
+                marked_ind = i
+        if marked_ind is not None:
+            self._mark_answers(marked_ind)
 
+    def _mark_answers(self, ind_to_check: int) -> None:
+        """
+        function that marks the answers in window, checks if it was marked already
+        and puts true if it was for the loading of windows when going back and forth
+        if user gets the correct answer on the first try the word's weight will be reduced
+        through the controller
+        :param ind_to_check: the index the user clicked submit on
+        :return: None
+        """
+        self._prev_answers[self._curr_question_ind][ind_to_check] = True
+
+        #checks if was already marked to avoid marking more than once
+
+        if (" ✅" in self._option_buttons[ind_to_check].text()
+                or " ❌" in self._option_buttons[ind_to_check].text()):
+            return
+
+        if ind_to_check == self._questions[self._curr_question_ind][2]:
+            #check if this is first try, if yes then reduce weight through controller
+            if self._error_lst[self._curr_question_ind]:
                 self._controller.right_answer(self._questions[self._curr_question_ind][0])
-                self._option_buttons[selected_option_index].setText(
-                    self._option_buttons[selected_option_index].text() + " ✅")
-            else:
-                self._option_buttons[selected_option_index].setText(
-                    self._option_buttons[selected_option_index].text() + " ❌")
+
+            self._option_buttons[ind_to_check].setText(
+                self._option_buttons[ind_to_check].text() + " ✅")
+        else:
+            self._error_lst[self._curr_question_ind]=False
+            self._option_buttons[ind_to_check].setText(
+                self._option_buttons[ind_to_check].text() + " ❌")
+
+    def _mark_prev_answers(self) -> None:
+        """
+        function that calls the marking function for every option already marked
+        since the quiz was open
+        :return: None
+        """
+        for i, answer in enumerate(self._prev_answers[self._curr_question_ind]):
+            if answer is not None:
+                self._mark_answers(i)
 
     def _next_question(self) -> None:
-        """Move to the next question."""
+        """Move to the next question"""
         if self._curr_question_ind < len(self._questions) - 1:
             self._curr_question_ind += 1
             self._init_ui()

@@ -1,7 +1,7 @@
-from typing import Union, Tuple, List
+from typing import Union
 from bs4 import BeautifulSoup
 import requests
-from Exceptions import URLException
+from main.Exceptions import URLException
 
 
 class WebScraper:
@@ -15,14 +15,14 @@ class WebScraper:
     return a list of tuples of meaning,example
     """
 
-    def __init__(self, website_used: str = "https://www.merriam-webster.com/dictionary/"):
+    def __init__(self, website_used: str):
         """
         Initializes the WebScraper with the specified website.
         :param website_used: The URL of the dictionary website.
         """
         self._website_used = website_used
 
-    def read_word(self, name_word: str) -> List[Tuple[str, Union[str, int]]]:
+    def read_word(self, name_word: str) -> list[tuple[str, Union[str, int]]]:
         """
         Retrieves the meanings of the specified word from the dictionary website.
 

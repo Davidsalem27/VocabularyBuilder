@@ -1,8 +1,8 @@
 
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QLabel, QPushButton, QScrollArea
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QListWidget, QScrollArea
 
-from WordMeaningWindow import WordMeaningWindow
-from Constants import Constants as c
+from menus_and_controllers import WordMeaningWindow
+from main.Constants import Constants as c
 
 class ShowWordsMenu(QWidget):
     """
@@ -71,5 +71,5 @@ class ShowWordsMenu(QWidget):
         """
         word = item.text()  # Get the word from the clicked item
         meanings = self._controller.get_meaning(word)
-        self._detail_window = WordMeaningWindow(word, meanings)  # Create a new window for the word
+        self._detail_window = WordMeaningWindow.WordMeaningWindow(word, meanings)  # Create a new window for the word
         self._detail_window.show()  # Show the new window

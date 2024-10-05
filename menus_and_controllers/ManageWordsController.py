@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QMessageBox
 
-import WordManager as wm
-import Exceptions
+from database import WordManager as wm
+from main import Exceptions
+
 
 class ManageWordsController:
     """

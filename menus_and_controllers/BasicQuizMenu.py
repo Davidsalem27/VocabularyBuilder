@@ -1,9 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QHBoxLayout, QPushButton, QLabel
 
-
-import BasicQuizController
-from Constants import Constants as c
+from menus_and_controllers import BasicQuizController
+from main.Constants import Constants as c
 
 class BasicQuizMenu(QWidget):
     """

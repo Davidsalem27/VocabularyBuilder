@@ -1,3 +1,4 @@
+
 class Word:
     """
     Represents a word with its meanings and associated weight.

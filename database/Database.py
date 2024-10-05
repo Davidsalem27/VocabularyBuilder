@@ -1,8 +1,9 @@
-import random
+import os
 import sqlite3
+import sys
 
-import Word
-from Constants import Constants as c
+from database import Word
+from main.Constants import Constants as c
 
 
 class DatabaseManager:
@@ -23,8 +24,14 @@ class DatabaseManager:
         will create a new database called words if one doesn't already exist
 
         """
-
-        self._connection = sqlite3.connect(c.DATABASE_PATH)
+        if hasattr(sys, '_MEIPASS'):
+            # Running in a PyInstaller bundle
+            self._db_path = os.path.join(sys._MEIPASS, 'assets', 'words.db')
+        else:
+            # Running in a normal Python environment
+            self._db_path = os.path.join(os.path.dirname(__file__), '..', 'assets', 'words.db')
+        print(f"Connecting to database at: {self._db_path}")
+        self._connection = sqlite3.connect(self._db_path)
         self._cursor = self._connection.cursor()
         self._create_Table()
 
@@ -97,12 +104,12 @@ class DatabaseManager:
         :param word: A Word object containing the word name, weight, and meanings.
         :return: None
         """
-        if self.word_exists(word.name):
+        if self._word_exists(word.name):
             return
 
         self._cursor.execute(
             "INSERT OR IGNORE INTO words (word, weight) VALUES (?, ?);",
-            (word.name.lower(), word.weight)
+            (word.name, word.weight)
         )
         self._connection.commit()
 
@@ -129,7 +136,7 @@ class DatabaseManager:
         :param word: The word to be deleted from the database.
         :return: None
         """
-        if not self.word_exists(word):
+        if not self._word_exists(word):
             raise ValueError()
         self._cursor.execute("DELETE FROM words WHERE word = ?", (word,))
         self._connection.commit()
@@ -144,7 +151,7 @@ class DatabaseManager:
         :param increment: The amount to increment the weight by.
         :return: None
         """
-        if not self.word_exists(word):
+        if not self._word_exists(word):
             raise ValueError()
         self._cursor.execute("UPDATE words SET weight = weight + ? WHERE word = ?", (increment, word))
         self._connection.commit()
@@ -186,7 +193,7 @@ class DatabaseManager:
         else:
             print(f"No meanings found for the word '{word_name}'.")
 
-    def word_exists(self, word_name: str) -> bool:
+    def _word_exists(self, word_name: str) -> bool:
         """
         Checks if a specified word exists in the database by checking the words table.
 
@@ -233,7 +240,7 @@ class DatabaseManager:
         self._connection.close()
 
     ######for testing#######
-    def print_all_words(self):
+    def _print_all_words(self):
         # self._cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 
         words = self.get_all_words()
@@ -241,11 +248,11 @@ class DatabaseManager:
             print("Words in the database:")
             for (word,) in words:  # Unpack the tuple directly
                 print(word)
-                self.print_meanings_of_word(word)
+                self._print_meanings_of_word(word)
         else:
             print("No words found in the database.")
 
-    def print_meanings_of_word(self, word_name):
+    def _print_meanings_of_word(self, word_name):
         # Query to get meanings associated with the given word
         self._cursor.execute("""
                 SELECT meanings.id, meanings.meaning 

@@ -1,24 +1,21 @@
-from PyQt5.QtWidgets import QApplication, QWidget
-
-import BasicQuizController
-import BasicQuizMenu
-import ManageWordsMenu
-import MulitChoiceQuizMenu
-import MutliChoiceQuizController
-import QuizMenu
-import QuizMenuController
-import SetTimedQuizzesController
-import SetTimedQuizzesMenu
-import SettingsController
-import SettingsMenu
-import ShowWordsController
-import ShowWordsMenu
-import WordManager as wm
-import MainMenuController
-import MainMenu as MainMenu
-import ManageWordsController
-from Constants import Constants as c
-
+from menus_and_controllers import (
+    BasicQuizController,
+    BasicQuizMenu,
+    QuizMenuController,
+    MainMenuController,
+    ManageWordsMenu,
+    MulitChoiceQuizMenu,
+    MutliChoiceQuizController,
+    QuizMenu,
+    SetTimedQuizzesController,
+    SetTimedQuizzesMenu,
+    ShowWordsController,
+    ShowWordsMenu,
+    ManageWordsController,
+    MainMenu,
+)
+from main.Constants import Constants as c
+from database import WordManager as wm
 class ControllerMenuFactory:
     """
     Factory for creating pairs of controller and menu.
@@ -65,17 +62,18 @@ class ControllerMenuFactory:
         """
         quiz_menu_controller = QuizMenuController.QuizMenuController(self.word_manager)
         return QuizMenu.QuizMenu(quiz_menu_controller, self.create_basic_quiz_menu,
-                                 self.create_timed_quiz_menu,self.create_multichoice_quiz)
+                                 self.create_timed_quiz_menu, self.create_multichoice_quiz)
 
 
 
-    def create_settings_menu(self) -> SettingsMenu.SettingsMenu:
-        """Creates the settings menu with its controller.
-
-        :return: The created settings menu.
-        """
-        settings_controller = SettingsController.SettingsController(self.word_manager)
-        return SettingsMenu.SettingsMenu(settings_controller)
+    def create_settings_menu(self) -> None:
+        pass
+    #     """Creates the settings menu with its controller.
+    #
+    #     :return: The created settings menu.
+    #     """
+    #     settings_controller = SettingsController.SettingsController(self.word_manager)
+    #     return SettingsMenu.SettingsMenu(settings_controller)
 
     def create_show_words_menu(self) -> ShowWordsMenu.ShowWordsMenu:
         """Creates the show words menu with its controller.
@@ -103,10 +101,10 @@ class ControllerMenuFactory:
         basic_quiz_controller = BasicQuizController.BasicQuizController(self.word_manager)
         return BasicQuizMenu.BasicQuizMenu(basic_quiz_controller, num_words)
 
-    def create_multichoice_quiz(self, num_words: int =c.DEFAULT_NUM_WORDS) ->MulitChoiceQuizMenu.MultipleChoiceQuizMenu:
+    def create_multichoice_quiz(self, num_words: int =c.DEFAULT_NUM_WORDS) -> MulitChoiceQuizMenu.MultipleChoiceQuizMenu:
         """Creates the multichoice quiz menu with its controller.
 
         :return: The created multichoice quiz menu.
         """
-        controller=MutliChoiceQuizController.MultiChoiceQuizController(self.word_manager)
+        controller= MutliChoiceQuizController.MultiChoiceQuizController(self.word_manager)
         return MulitChoiceQuizMenu.MultipleChoiceQuizMenu(controller, num_words)

@@ -2,7 +2,7 @@ import PIL.Image
 import pystray
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget, QVBoxLayout
-from Constants import Constants as c
+from main.Constants import Constants as c
 
 class TrayBar(QThread):
     """A class that manages a system tray icon for the application.

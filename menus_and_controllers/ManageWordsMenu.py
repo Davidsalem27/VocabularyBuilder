@@ -1,8 +1,6 @@
-import MainMenuController
-import ManageWordsController
-from Constants import Constants as c
+from menus_and_controllers import ManageWordsController
+from main.Constants import Constants as c
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLineEdit, QLabel
-from typing import Callable
 
 
 class ManageWordsMenu(QWidget):

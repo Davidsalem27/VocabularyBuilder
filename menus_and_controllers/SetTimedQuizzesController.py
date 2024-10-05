@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMessageBox
 
-from Constants import Constants as c
+from main.Constants import Constants as c
 
 class SetTimedQuizzesController:
     """

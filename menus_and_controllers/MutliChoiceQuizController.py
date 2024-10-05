@@ -1,6 +1,6 @@
 import random
-import WordManager as wm
-from Constants import Constants as c
+from database import WordManager as wm
+from main.Constants import Constants as c
 
 
 class MultiChoiceQuizController:
@@ -35,11 +35,14 @@ class MultiChoiceQuizController:
             # Get wrong meanings and put in options
             options = self._word_manager.get_meanings_excluding_word(word)
 
-            # Take the first meaning of the word
-            right_meaning = self._word_manager.get_meanings(word)[0][0]
+            # Take a random meaning of the word
+            right_meanings = self._word_manager.get_meanings(word)
+
+            rand_ind = random.randint(0, len(right_meanings)-1)
+            right_meaning = right_meanings[rand_ind][0]
 
             # Put the right answer in a random place
-            right_place = random.randint(0, c.MULTI_CHOICE_NUM_OPTIONS-1)
+            right_place = random.randint(0, c.MULTI_CHOICE_NUM_OPTIONS - 1)
             options.insert(right_place, right_meaning)
 
             questions.append((word, options, right_place))
